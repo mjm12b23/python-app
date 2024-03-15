@@ -7,7 +7,9 @@ def get_secret(project_id, secret_id, version_id="latest"):
     return response.payload.data.decode("UTF-8")
 
 # Example usage
-project_id = "your-project-id"
-secret_id = "your-secret-name"
+project_id = "precise-line-417303"
+secret_id = "secret1"
 secret_value = get_secret(project_id, secret_id)
 print("Secret Value:", secret_value)
+
+get_secret(project_id, secret_id, "1")
