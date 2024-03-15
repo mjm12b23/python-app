@@ -1,23 +1,15 @@
-import functions_framework
 from google.cloud import secretmanager
 
-@functions_framework.http
-def hello_secret(request):
-  # Set variables
-  project_id = 'precise-line-417303' #Fill in your project
-  secret_id = 'secret1'
-  version_id = '1'  
-  
-  # Create Sercet Version Reference
-  name = f"projects/{project_id}/secrets/{secret_id}/versions/{version_id}"
+def get_secret(project_id, secret_id, version_id="latest"):
+    client = secretmanager.SecretManagerServiceClient()
+    name = f"projects/{project_id}/secrets/{secret_id}/versions/{version_id}"
+    response = client.access_secret_version(request={"name": name})
+    return response.payload.data.decode("UTF-8")
 
-  # Instantiate Secret Manager Client
-  client = secretmanager.SecretManagerServiceClient()
-  
-  # Get Response
-  response = client.access_secret_version(request={"name": name})
+# Example usage
+project_id = "precise-line-417303"
+secret_id = "secret1"
+secret_value = get_secret(project_id, secret_id)
+print("Secret Value:", secret_value)
 
-  # Extract 'Plain Text' Key
-  secret_key = response.payload.data.decode("UTF-8")
-
-  return 'Hello you successfully called a key from Secret Manager: {}!'.format(secret_key)
+get_secret(project_id, secret_id, "1")
